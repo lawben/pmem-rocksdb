@@ -1,27 +1,26 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #kvs write.sh
 ulimit -n 1048576
 
-db=/mnt/nvme0n1/rocksdb_sst
-wal=/mnt/pmem8/rocksdb_wal
-kvs_file=/mnt/pmem8/rocksdb_value/rocksdb.value
-kvs_size=407374182400
+db=/mnt/nvme0/rocksdb_sst
+wal=/mnt/nvrams1/viper/rocks-test/wal
+kvs_file=/mnt/nvrams1/viper/rocks-test/rocksdb.value
+kvs_size=53687091200
 
-rm -f /mnt/nvme0n1/rocksdb_sst/* /mnt/nvme0n1/rocksdb_wal/*
-rm -f /mnt/nvme1n1/rocksdb_sst/* /mnt/nvme1n1/rocksdb_wal/*
-rm -f /mnt/pmem8/rocksdb_sst/* /mnt/pmem8/rocksdb_wal/*
-rm -f /mnt/pmem8/rocksdb_value/rocksdb.value
+rm -f ${db}/* 
+rm -f ${wal}/*
+rm -f ${kvs_file}*
 
 export LD_LIBRARY_PATH=/usr/local/lib64/:/usr/local/lib
-numactl --cpunodebind=1 --membind=1 \
+numactl --cpunodebind=0 --membind=0 \
 ./db_bench \
     --benchmarks="fillrandom,stats,levelstats" \
     --enable_write_thread_adaptive_yield=false \
     --disable_auto_compactions=false \
     --max_background_compactions=32 \
     --max_background_flushes=4 \
-    --value_size=1024 \
-    --key_size=128 \
+    --value_size=200 \
+    --key_size=16 \
     --db=${db} \
     --wal_dir=${wal} \
     --enable_pipelined_write=true \

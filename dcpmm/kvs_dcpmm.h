@@ -40,7 +40,7 @@ enum ValueEncoding {
 };
 
 // Create or open the space on DCPMM for storing value.
-extern int KVSOpen(const char* path, size_t size, size_t pool_count = 16);
+extern int KVSOpen(const char* path, size_t size, size_t pool_count = 36);
 
 // Close it.
 void KVSClose();
